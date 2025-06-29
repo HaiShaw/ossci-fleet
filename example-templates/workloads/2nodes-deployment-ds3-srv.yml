@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sglang-deepseek-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sglang-deepseek
+  template:
+    metadata:
+      labels:
+        app: sglang-deepseek
+    spec:
+      containers:
+      - name: sglang
+        image: lmsysorg/sglang:v0.4.8.post1-rocm630
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            python3 -m sglang.launch_server --model /data/models/DeepSeek-V3
+        env:
+        - name: SGLANG_USE_AITER
+          value: "1"
+        resources:
+          limits:
+            amd.com/gpu: 8
+        volumeMounts:
+        - name: sglang-data
+          mountPath: /data
+      volumes:
+      - name: sglang-data
+        hostPath:
+          path: /vfs
+      restartPolicy: Always

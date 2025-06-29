@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: interactive-8gpu-mount-pod
+  labels:
+    app: interactive-gpu-mount
+spec:
+  containers:
+  - name: sglang
+    image: lmsysorg/sglang:v0.4.8.post1-rocm630
+    command: ["sleep"]
+    args: ["infinity"]
+    resources:
+      limits:
+        amd.com/gpu: 8
+    stdin: true
+    tty: true
+    volumeMounts:
+    - name: sglang-data
+      mountPath: /data
+  volumes:
+  - name: sglang-data
+    hostPath:
+      path: /vfs
+  restartPolicy: Never

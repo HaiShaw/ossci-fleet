@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: interactive-pod
+  labels:
+    app: interactive
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu:22.04
+    command: ["sleep"]
+    args: ["infinity"]
+    stdin: true
+    tty: true
+  restartPolicy: Never
